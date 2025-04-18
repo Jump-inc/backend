@@ -43,9 +43,16 @@ const joinWaitList = async (req, res) => {
         <p><a href="#">Unsubscribe</a></p>
       `,
     };
-
-    await sgMail.send(msg);
-    console.log("message sent");
+    try {
+      await sgMail.send(msg);
+      console.log("message sent");
+      res.status(200).json({ message: "EMAIL SENT" });
+    } catch (error) {
+      console.error(
+        "Failed to send email:",
+        error.response?.body || error.message
+      );
+    }
 
     // 3. Save to database
     await entry.save();
@@ -54,7 +61,7 @@ const joinWaitList = async (req, res) => {
     res.status(201).json({
       success: true,
       data: entry,
-      message: "Successfully joined waitlist",
+      message: "Successfully joined waitlist and mail sent",
     });
   } catch (error) {
     // 5. Handle errors
