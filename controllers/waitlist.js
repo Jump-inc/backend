@@ -1,5 +1,6 @@
 const WaitList = require("../models/waitList");
 const nodemail = require("nodemailer");
+const { Parser } = require("json2csv");
 const sgMail = require("@sendgrid/mail");
 require("dotenv").config();
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -90,5 +91,21 @@ const deleteWaitList = async (req, res) => {
     res.status(500).json({ message: error });
   }
 };
+const exportWaitlist = async (req, res) => {
+    try{
+        const entries = await WaitList.find({}, 'name email -_id')
 
-module.exports = { joinWaitList, getWaitList, deleteWaitList }; // Export the function
+        const fields = ['name', 'email']
+        const parser = new Parser ({fields})
+        const csv = parser.parse(entries)
+
+        res.header("content-type", "text/csv");
+        res.attachment("waitlist_export.csv")
+        res.send(csv)
+    } catch (error) {
+        console.log("export failed", error)
+        res.status(500).json({message: error})
+    }
+}
+
+module.exports = { joinWaitList, getWaitList, deleteWaitList, exportWaitlist }; // Export the function
