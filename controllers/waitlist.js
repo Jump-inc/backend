@@ -6,7 +6,7 @@ require("dotenv").config();
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const joinWaitList = async (req, res) => {
-  const { email, name } = req.body;
+  const { email } = req.body;
 
   try {
     // 1. Check if email exists (corrected findOne syntax)
@@ -23,7 +23,6 @@ const joinWaitList = async (req, res) => {
     // 2. Create new waitlist entry
     const entry = new WaitList({
       email,
-      name,
     });
 
     const msg = {
@@ -32,10 +31,10 @@ const joinWaitList = async (req, res) => {
         email: "olafaruqbakare@gmail.com",
         name: "Jump",
       },
-      subject: `Thanks for joining our waitlist ${name}`,
+      subject: `Thanks for joining our waitlist`,
       html: `
         <h1>Welcome to the waitlist!</h1>
-        <p>Hi ${name},</p>
+        <p>Hi!,</p>
         <p>We'll notify you when we launch. Here's what to expect:</p>
         <ul>
           <li>Early access to features</li>
@@ -47,7 +46,6 @@ const joinWaitList = async (req, res) => {
     try {
       await sgMail.send(msg);
       console.log("message sent");
-      res.status(200).json({ message: "EMAIL SENT" });
     } catch (error) {
       console.error(
         "Failed to send email:",
@@ -85,27 +83,29 @@ const getWaitList = async (req, res) => {
 const deleteWaitList = async (req, res) => {
   const { id } = req.params;
   try {
-    await WaitList.findByIdAndDelete(id);
-    res.status(200).json({ message: "successfully deleted" });
+    const deletedEntry = await WaitList.findByIdAndDelete(id);
+    res
+      .status(200)
+      .json({ message: "successfully deleted", data: deletedEntry });
   } catch (error) {
     res.status(500).json({ message: error });
   }
 };
 const exportWaitlist = async (req, res) => {
-    try{
-        const entries = await WaitList.find({}, 'name email -_id')
+  try {
+    const entries = await WaitList.find({}, "name email -_id");
 
-        const fields = ['name', 'email']
-        const parser = new Parser ({fields})
-        const csv = parser.parse(entries)
+    const fields = ["name", "email"];
+    const parser = new Parser({ fields });
+    const csv = parser.parse(entries);
 
-        res.header("content-type", "text/csv");
-        res.attachment("waitlist_export.csv")
-        res.send(csv)
-    } catch (error) {
-        console.log("export failed", error)
-        res.status(500).json({message: error})
-    }
-}
+    res.header("content-type", "text/csv");
+    res.attachment("waitlist_export.csv");
+    res.send(csv);
+  } catch (error) {
+    console.log("export failed", error);
+    res.status(500).json({ message: error });
+  }
+};
 
 module.exports = { joinWaitList, getWaitList, deleteWaitList, exportWaitlist }; // Export the function

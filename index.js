@@ -1,12 +1,20 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
+const cors = require("cors");
 const waitListRoute = require("./routes/waitlist.route");
 const serverless = require("serverless-http");
 
 require("dotenv").config();
 
 app.use(express.json());
+
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 // routes
 app.use("/api", waitListRoute);
 const PORT = process.env.PORT || 3000;
