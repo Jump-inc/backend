@@ -28,20 +28,35 @@ const joinWaitList = async (req, res) => {
     const msg = {
       to: email,
       from: {
-        email: "olafaruqbakare@gmail.com",
+        email: "no-reply@streamjump.info",
         name: "Jump",
       },
       subject: `Thanks for joining our Waitlist`,
       html: `
-        <h1>Welcome to the Jump</h1>
-        <p>Hi,</p>
-        <p>We'll notify you when we launch. Here's what to expect:</p>
-        <ul>
-          <li>Early access to features</li>
-          <li>Exclusive discounts</li>
+        <div style="background: #fefefe; padding: 20px; font-family: 'Segoe UI', sans-serif; color: #333;">
+    <div style="max-width: 600px; margin: auto; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+      <div style="background: linear-gradient(to right, #ff6a00, #ee0979); color: white; padding: 30px; text-align: center;">
+        <h1 style="margin: 0; font-size: 28px;">Welcome to Jump 🚀</h1>
+        <p style="margin: 10px 0 0;">You're officially on the waitlist!</p>
+      </div>
+      <div style="padding: 30px; background: white;">
+        <p>Hi there,</p>
+        <p>Thanks for signing up! We’re super excited to have you on board. Here’s what you’ll get access to:</p>
+        <ul style="padding-left: 20px; line-height: 1.6;">
+          <li>✅ Early access to new features</li>
+          <li>🎁 Exclusive discounts and insider perks</li>
         </ul>
-        <p><a href="#">Unsubscribe</a></p>
-      `,
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="https://streamjump.info" style="background: #ee0979; color: white; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: bold;">Visit Our Website</a>
+        </div>
+        <p>If you'd rather not hear from us, you can <a href="https://streamjump.info/unsubscribe" style="color: #ee0979;">unsubscribe</a>.</p>
+      </div>
+      <div style="background: #f7f7f7; padding: 15px; text-align: center; font-size: 12px; color: #999;">
+        © 2025 Jump, All rights reserved.<br>
+      </div>
+    </div>
+  </div>
+  `,
     };
     try {
       await sgMail.send(msg);
