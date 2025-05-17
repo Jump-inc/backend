@@ -31,10 +31,10 @@ const joinWaitList = async (req, res) => {
         email: "olafaruqbakare@gmail.com",
         name: "Jump",
       },
-      subject: `Thanks for joining our waitlist`,
+      subject: `Thanks for joining our Waitlist`,
       html: `
-        <h1>Welcome to the waitlist!</h1>
-        <p>Hi!,</p>
+        <h1>Welcome to the Jump</h1>
+        <p>Hi,</p>
         <p>We'll notify you when we launch. Here's what to expect:</p>
         <ul>
           <li>Early access to features</li>
