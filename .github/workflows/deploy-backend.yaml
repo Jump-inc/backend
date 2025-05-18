@@ -1,0 +1,46 @@
+name: Deploy React App with PM2
+
+on:
+  push:
+    branches:
+      - frontend
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Build React app (bypass warnings as errors)
+        run: |
+          CI=false npm run build
+
+      - name: Deploy and start app on server
+        uses: appleboy/ssh-action@master
+        with:
+          host: 34.46.49.87
+          username: ibukun_o
+          key: ${{ secrets.GCP_SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            # Update Node.js to the latest version (v16 or above)
+            curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+            sudo npm install pm2@latest -g
+
+            # Deploy the app
+            cd /home/ibukun_o/backend
+            git pull origin backend
+            npm install --legacy-peer-deps
+            npm run build
+            pm2 restart backend || pm2 start npm --name backend -- start
