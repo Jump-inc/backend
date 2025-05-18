@@ -3,7 +3,7 @@ name: Deploy React App with PM2
 on:
   push:
     branches:
-      - frontend
+      - main
 
 jobs:
   deploy:
