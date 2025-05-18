@@ -1,4 +1,4 @@
-name: Deploy Backend App with PM2
+name: Deploy React App with PM2
 
 on:
   push:
@@ -21,10 +21,6 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
-      - name: Build React app (bypass warnings as errors)
-        run: |
-          CI=false npm run build
-
       - name: Deploy and start app on server
         uses: appleboy/ssh-action@master
         with:
@@ -37,16 +33,8 @@ jobs:
             curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
             sudo apt-get install -y nodejs
             sudo npm install pm2@latest -g
-
-            # Navigate to the backend directory
+            # Deploy the app
             cd /home/ibukun_o/backend
-
-            # Pull latest code and install dependencies
             git pull origin backend
             npm install --legacy-peer-deps
-
-            # If using a build step (optional), uncomment below:
-            # npm run build
-
-            # Start the app using pm2 (restart if already running)
-            pm2 restart backend || pm2 start index.js --name backend --watch
+            pm2 restart backend || pm2 start npm --name backend -- start
