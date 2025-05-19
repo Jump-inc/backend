@@ -11,7 +11,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://waitlist.streamjump.info"],
+    origin: ["http://localhost:3000", "https://streamjump.info"],
     credentials: true,
   })
 );
