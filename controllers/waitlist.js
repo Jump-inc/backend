@@ -75,7 +75,7 @@ const joinWaitList = async (req, res) => {
     res.status(201).json({
       success: true,
       data: entry,
-      message: "Successfully joined waitlist and mail sent",
+      message: "successfully joined waitlist",
     });
   } catch (error) {
     // 5. Handle errors
