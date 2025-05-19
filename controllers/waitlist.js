@@ -16,7 +16,7 @@ const joinWaitList = async (req, res) => {
       return res.status(400).json({
         // Added 'return' to stop execution
         success: false,
-        message: "Email already exists, please use a different email",
+        message: "You're already on the waitlist!",
       });
     }
 
@@ -75,7 +75,7 @@ const joinWaitList = async (req, res) => {
     res.status(201).json({
       success: true,
       data: entry,
-      message: "successfully joined waitlist",
+      message: "Boom! You’re in the VIP queue",
     });
   } catch (error) {
     // 5. Handle errors
