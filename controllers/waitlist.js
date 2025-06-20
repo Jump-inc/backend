@@ -2,6 +2,7 @@ const WaitList = require("../models/waitList");
 const nodemail = require("nodemailer");
 const { Parser } = require("json2csv");
 const sgMail = require("@sendgrid/mail");
+const nodemailer = require("nodemailer");
 require("dotenv").config();
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -25,48 +26,99 @@ const joinWaitList = async (req, res) => {
       email,
     });
 
-    const msg = {
-      to: email,
-      from: {
-        email: "no-reply@streamjump.info",
-        name: "Jump",
+    const transporter = nodemailer.createTransport({
+      host: "smtp.zeptomail.com",
+      port: 465,
+      secure: true, // SSL
+      auth: {
+        user: "emailapikey",
+        pass: process.env.ZPASS, // Use app password here
       },
-      subject: `Thanks for joining our Waitlist`,
+    });
+
+    const mailOptions = {
+      from: {
+        name: "Jump",
+        address: "no-reply@streamjump.info",
+      },
+      to: email,
+      subject: "Thanks for joining our Waitlist",
       html: `
-        <div style="background: #fefefe; padding: 20px; font-family: 'Segoe UI', sans-serif; color: #333;">
-    <div style="max-width: 600px; margin: auto; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-      <div style="background: linear-gradient(to right, #ff6a00, #ee0979); color: white; padding: 30px; text-align: center;">
-        <h1 style="margin: 0; font-size: 28px;">Welcome to Jump 🚀</h1>
-        <p style="margin: 10px 0 0;">You're officially on the waitlist!</p>
-      </div>
-      <div style="padding: 30px; background: white;">
-        <p>Hi there,</p>
-        <p>Thanks for signing up! We’re super excited to have you on board. Here’s what you’ll get access to:</p>
-        <ul style="padding-left: 20px; line-height: 1.6;">
-          <li>✅ Early access to new features</li>
-          <li>🎁 Exclusive discounts and insider perks</li>
-        </ul>
-        <div style="text-align: center; margin: 30px 0;">
-          <a href="https://streamjump.info" style="background: #ee0979; color: white; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: bold;">Visit Our Website</a>
+    <div style="background: #fefefe; padding: 20px; font-family: 'Segoe UI', sans-serif; color: #333;">
+      <div style="max-width: 600px; margin: auto; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <div style="background: linear-gradient(to right, #ff6a00, #ee0979); color: white; padding: 30px; text-align: center;">
+          <h1 style="margin: 0; font-size: 28px;">Welcome to Jump 🚀</h1>
+          <p style="margin: 10px 0 0;">You're officially on the waitlist!</p>
         </div>
-        <p>If you'd rather not hear from us, you can <a href="https://streamjump.info/unsubscribe" style="color: #ee0979;">unsubscribe</a>.</p>
-      </div>
-      <div style="background: #f7f7f7; padding: 15px; text-align: center; font-size: 12px; color: #999;">
-        © 2025 Jump, All rights reserved.<br>
+        <div style="padding: 30px; background: white;">
+          <p>Hi there,</p>
+          <p>Thanks for signing up! We’re super excited to have you on board. Here’s what you’ll get access to:</p>
+          <ul style="padding-left: 20px; line-height: 1.6;">
+            <li>✅ Early access to new features</li>
+            <li>🎁 Exclusive discounts and insider perks</li>
+          </ul>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="https://streamjump.info" style="background: #ee0979; color: white; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: bold;">Visit Our Website</a>
+          </div>
+          <p>If you'd rather not hear from us, you can <a href="https://streamjump.info/unsubscribe" style="color: #ee0979;">unsubscribe</a>.</p>
+        </div>
+        <div style="background: #f7f7f7; padding: 15px; text-align: center; font-size: 12px; color: #999;">
+          © 2025 Jump, All rights reserved.<br>
+        </div>
       </div>
     </div>
-  </div>
   `,
     };
+
     try {
-      await sgMail.send(msg);
-      console.log("message sent");
+      const info = await transporter.sendMail(mailOptions);
+      console.log("✅ Email sent:", info.messageId);
     } catch (error) {
-      console.error(
-        "Failed to send email:",
-        error.response?.body || error.message
-      );
+      console.error("❌ Failed to send email:", error.message || error);
     }
+
+    //   const msg = {
+    //     to: email,
+    //     from: {
+    //       email: "no-reply@streamjump.info",
+    //       name: "Jump",
+    //     },
+    //     subject: `Thanks for joining our Waitlist`,
+    //     html: `
+    //       <div style="background: #fefefe; padding: 20px; font-family: 'Segoe UI', sans-serif; color: #333;">
+    //   <div style="max-width: 600px; margin: auto; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+    //     <div style="background: linear-gradient(to right, #ff6a00, #ee0979); color: white; padding: 30px; text-align: center;">
+    //       <h1 style="margin: 0; font-size: 28px;">Welcome to Jump 🚀</h1>
+    //       <p style="margin: 10px 0 0;">You're officially on the waitlist!</p>
+    //     </div>
+    //     <div style="padding: 30px; background: white;">
+    //       <p>Hi there,</p>
+    //       <p>Thanks for signing up! We’re super excited to have you on board. Here’s what you’ll get access to:</p>
+    //       <ul style="padding-left: 20px; line-height: 1.6;">
+    //         <li>✅ Early access to new features</li>
+    //         <li>🎁 Exclusive discounts and insider perks</li>
+    //       </ul>
+    //       <div style="text-align: center; margin: 30px 0;">
+    //         <a href="https://streamjump.info" style="background: #ee0979; color: white; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: bold;">Visit Our Website</a>
+    //       </div>
+    //       <p>If you'd rather not hear from us, you can <a href="https://streamjump.info/unsubscribe" style="color: #ee0979;">unsubscribe</a>.</p>
+    //     </div>
+    //     <div style="background: #f7f7f7; padding: 15px; text-align: center; font-size: 12px; color: #999;">
+    //       © 2025 Jump, All rights reserved.<br>
+    //     </div>
+    //   </div>
+    // </div>
+    // `,
+    //   };
+    //   try {
+    //     await sgMail.send(msg);
+    //     console.log("message sent");
+    //   } catch (error) {
+    //     console.error(
+    //       "Failed to send email:",
+    //       error.response?.body || error.message
+    //     );
+    //   }
 
     // 3. Save to database
     await entry.save();
