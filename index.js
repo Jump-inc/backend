@@ -1,5 +1,5 @@
 require("dotenv").config();
-console.log('[DEBUG] MONGO_URI =', process.env.MONGO_URI);
+console.log("[DEBUG] MONGO_URI =", process.env.MONGODB_URI);
 
 const mongoose = require("mongoose");
 const express = require("express");
@@ -8,10 +8,7 @@ const app = express();
 const waitListRoute = require("./routes/waitlist.route");
 const serverless = require("serverless-http");
 
-
-
 app.use(express.json());
-
 
 // routes
 app.use("/api", waitListRoute);

@@ -4,7 +4,6 @@ const { Parser } = require("json2csv");
 const sgMail = require("@sendgrid/mail");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const joinWaitList = async (req, res) => {
   const { email } = req.body;
