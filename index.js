@@ -12,15 +12,10 @@ const serverless = require("serverless-http");
 
 app.use(express.json());
 
-app.use(
-  cors({
-    origin: ["http://localhost:3000", "https://streamjump.info"],
-    credentials: true,
-  })
-);
+
 // routes
 app.use("/api", waitListRoute);
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 app.get("/", (req, res) => {
   res.send("Server is now running");
