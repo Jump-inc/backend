@@ -7,7 +7,7 @@ const cors = require("cors");
 const waitListRoute = require("./routes/waitlist.route");
 const serverless = require("serverless-http");
 
-require("dotenv").config();
+
 
 app.use(express.json());
 
