@@ -1,5 +1,5 @@
-const express = require("express");
 const mongoose = require("mongoose");
+const express = require("express");
 const app = express();
 const cors = require("cors");
 const waitListRoute = require("./routes/waitlist.route");
