@@ -30,9 +30,9 @@ jobs:
           port: 22
           script: |
             # Update Node.js to the latest version (v16 or above)
-            curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-            sudo apt-get install -y nodejs
-            sudo npm install pm2@latest -g
+            #curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+            #sudo apt-get install -y nodejs
+            #sudo npm install pm2@latest -g
             # Deploy the app
             cd /home/ibukun_o/backend
             git pull origin backend
