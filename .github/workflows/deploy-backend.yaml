@@ -24,7 +24,7 @@ jobs:
       - name: Deploy and start app on server
         uses: appleboy/ssh-action@master
         with:
-          host: 34.46.49.87
+          host: 34.72.251.199
           username: ibukun_o
           key: ${{ secrets.GCP_SSH_PRIVATE_KEY }}
           port: 22
